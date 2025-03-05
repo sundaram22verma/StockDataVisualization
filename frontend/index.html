@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Data Visualization</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #007bff;
+            --secondary: #6c757d;
+            --bg-light: #f4f7fa;
+            --bg-dark: #121212;
+            --text-light: #2c3e50;
+            --text-dark: #e0e0e0;
+            --card-bg-light: white;
+            --card-bg-dark: #1e1e1e;
+            --border-dark: #333;
+            --hover-dark: #2a2a2a;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.4s ease;
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .container {
+            background-color: var(--card-bg-light);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 2rem;
+            margin: 2rem auto;
+            transition: all 0.4s ease;
+        }
+
+        .dark-mode .container {
+            background-color: var(--card-bg-dark);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            border: 1px solid var(--border-dark);
+        }
+
+        h4, h5 {
+            color: var(--text-light);
+            font-weight: 600;
+            transition: color 0.4s ease;
+        }
+
+        .dark-mode h4, .dark-mode h5 {
+            color: var(--text-dark);
+            text-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+
+        /* Company List */
+        .company-list-container {
+            max-height: 880px;
+            overflow-y: auto;
+            border-radius: 12px;
+            background-color: var(--card-bg-light);
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+            transition: all 0.4s ease;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) transparent;
+        }
+
+        .dark-mode .company-list-container {
+            background-color: var(--card-bg-dark);
+            border: 1px solid var(--border-dark);
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+        }
+
+        .company-list-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .company-list-container::-webkit-scrollbar-thumb {
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+
+        .dark-mode .company-list-container::-webkit-scrollbar-track {
+            background: var(--card-bg-dark);
+        }
+
+        .company-list-container .list-group-item {
+            border-left: 4px solid transparent;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .dark-mode .company-list-container .list-group-item {
+            color: var(--text-dark);
+            border-bottom: 1px solid var(--border-dark);
+        }
+
+        .company-list-container .list-group-item:hover {
+            border-left-color: var(--primary);
+            background-color: rgba(0,123,255,0.1);
+            transform: translateX(5px);
+        }
+
+        .dark-mode .company-list-container .list-group-item:hover {
+            background-color: var(--hover-dark);
+        }
+
+        .company-list-container .list-group-item.active {
+            border-left-color: var(--primary);
+            background-color: rgba(0,123,255,0.2);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .dark-mode .company-list-container .list-group-item.active {
+            background-color: rgba(0,123,255,0.15);
+            box-shadow: 0 0 15px rgba(0,123,255,0.1);
+        }
+
+        /* Search Bar */
+        .search-bar {
+            margin-bottom: 1rem;
+        }
+
+        #company-search {
+            border-radius: 20px;
+            padding: 0.75rem 1.25rem;
+            border: 1px solid #ced4da;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .dark-mode #company-search {
+            background-color: var(--card-bg-dark);
+            border-color: var(--border-dark);
+            color: var(--text-dark);
+        }
+
+        #company-search:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+
+        #company-search::placeholder {
+            color: #ced4da;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode #company-search::placeholder {
+            color: white;
+        }
+
+        /* Controls */
+        .controls-container {
+            background-color: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            transition: all 0.4s ease;
+        }
+
+        .dark-mode .controls-container {
+            background-color: var(--card-bg-dark);
+            border: 1px solid var(--border-dark);
+        }
+
+        #stock-type {
+            border-radius: 20px;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .dark-mode #stock-type {
+            background-color: var(--card-bg-dark);
+            border-color: var(--border-dark);
+            color: var(--text-dark);
+        }
+
+        .btn-primary {
+            border-radius: 20px;
+            padding: 0.75rem 2rem;
+            font-weight: 500;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .btn-primary {
+            background: linear-gradient(135deg, #0056b3, #003580);
+            box-shadow: 0 0 15px rgba(0,123,255,0.2);
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+        }
+
+        /* Chart Containers */
+        .chart-container {
+            background-color: var(--card-bg-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.4s ease;
+        }
+
+        .dark-mode .chart-container {
+            background-color: var(--card-bg-dark);
+            border: 1px solid var(--border-dark);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Stats Panel */
+        .stats-panel {
+            background: linear-gradient(135deg, var(--card-bg-light), var(--bg-light));
+            border-left: 4px solid var(--primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            transition: all 0.4s ease;
+        }
+
+        .dark-mode .stats-panel {
+            background: linear-gradient(135deg, var(--card-bg-dark), #252525);
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            border: 1px solid var(--border-dark);
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .stat-item {
+            border-bottom: 1px solid var(--border-dark);
+        }
+
+        .dark-mode .stat-item strong {
+            color: #4dabf7;
+        }
+
+        .stat-item strong {
+            transition: all 0.3s ease;
+        }
+        
+        .stat-item strong.positive {
+            color: #28a745;
+        }
+        
+        .stat-item strong.negative {
+            color: #dc3545;
+        }
+
+        .dark-mode .stat-item strong.positive {
+            color: #51cf66;
+        }
+        
+        .dark-mode .stat-item strong.negative {
+            color: #ff6b6b;
+        }
+
+        /* Dark Mode Toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .dark-mode-toggle .btn {
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.4s ease;
+            background: var(--card-bg-light);
+            border: 2px solid var(--border-dark);
+        }
+
+        .dark-mode .dark-mode-toggle .btn {
+            background: var(--card-bg-dark);
+            color: #ffd700;
+            box-shadow: 0 0 15px rgba(255,215,0,0.2);
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .dark-mode .loading {
+            color: #4dabf7;
+        }
+
+        /* Add loading animation */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dark Mode Toggle -->
+    <div class="dark-mode-toggle">
+        <button class="btn btn-secondary" onclick="toggleDarkMode()">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <!-- Company List -->
+            <div class="col-md-3 position-relative">
+                <h4>Companies</h4>
+                <div class="search-bar">
+                    <input type="text" id="company-search" class="form-control" placeholder="Search companies...">
+                </div>
+                <div class="company-list-container">
+                    <ul id="company-list" class="list-group"></ul>
+                    <div class="loading"><i class="fas fa-spinner fa-spin"></i></div>
+                </div>
+            </div>
+
+            <!-- Stock Chart & Stats -->
+            <div class="col-md-9">
+                <div class="controls-container">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <label for="stock-type" class="form-label mb-2">Select Stock Data Type</label>
+                            <select id="stock-type" class="form-select">
+                                <option value="closing_index_value">Closing Price</option>
+                                <option value="open_index_value">Opening Price</option>
+                                <option value="high_index_value">High Price</option>
+                                <option value="low_index_value">Low Price</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="graph-type" class="form-label mb-2">Graph Type</label>
+                            <select id="graph-type" class="form-select">
+                                <option value="line">Line Graph</option>
+                                <option value="bar">Bar Graph</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="date-range" class="form-label mb-2">Date Range</label>
+                            <select id="date-range" class="form-select">
+                                <option value="7">Last Week</option>
+                                <option value="30">Last Month</option>
+                                <option value="90">Last 3 Months</option>
+                                <option value="180">Last 6 Months</option>
+                                <option value="365">Last Year</option>
+                                <option value="all" selected>All Time</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-end">
+                            <button class="btn btn-primary w-100" onclick="updateChart()">
+                                <i class="fas fa-sync-alt me-2"></i>Update Chart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container position-relative">
+                    <canvas id="stockChart"></canvas>
+                    <div class="loading-overlay"><div class="loading-spinner"></div></div>
+                </div>
+
+                <div class="chart-container">
+                    <h5>Trading Volume</h5>
+                    <svg id="volumeChart" width="800" height="200"></svg>
+                </div>
+
+                <div class="stats-panel">
+                    <h5>Stock Statistics</h5>
+                    <div class="stat-item">
+                        <span>Points Change</span>
+                        <strong id="points-change"></strong>
+                    </div>
+                    <div class="stat-item">
+                        <span>Change %</span>
+                        <strong id="change-percent"></strong>
+                    </div>
+                    <div class="stat-item">
+                        <span>PE Ratio</span>
+                        <strong id="pe-ratio"></strong>
+                    </div>
+                    <div class="stat-item">
+                        <span>PB Ratio</span>
+                        <strong id="pb-ratio"></strong>
+                    </div>
+                    <div class="stat-item">
+                        <span>Dividend Yield</span>
+                        <strong id="div-yield"></strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let stockChart;
+
+        // Load Companies List with Search
+        $(document).ready(function () {
+            $(".loading").show();
+            $.get("http://127.0.0.1:5000/companies", function (companies) {
+                companies.forEach(company => {
+                    $("#company-list").append(
+                        `<li class="list-group-item company" onclick="fetchStockData('${company}'); $(this).addClass('active').siblings().removeClass('active')">${company}</li>`
+                    );
+                });
+                $(".loading").hide();
+            }).fail(function () {
+                alert("Failed to load company list.");
+                $(".loading").hide();
+            });
+
+            // Company Search Filter
+            $("#company-search").on("input", function () {
+                let value = $(this).val().toLowerCase();
+                $("#company-list .company").each(function () {
+                    $(this).toggle($(this).text().toLowerCase().includes(value));
+                });
+            });
+        });
+
+        // Fetch stock data with loading state
+        function fetchStockData(company) {
+            let stockType = $("#stock-type").val();
+            let dateRange = $("#date-range").val();
+            let url = `http://127.0.0.1:5000/company?company=${company}&stock_type=${stockType}&date_range=${dateRange}`;
+            
+            $(".chart-container .loading-overlay").addClass("active");
+
+            return $.get(url)
+                .done(function(data) {
+                    if (!Array.isArray(data) || data.length === 0) {
+                        alert("No data found for the selected company.");
+                        return;
+                    }
+                    
+                    // Animate old chart out
+                    if (stockChart) {
+                        $("#stockChart").fadeOut(300, function() {
+                            drawChart(data, stockType, company);
+                            $(this).fadeIn(300);
+                        });
+                    } else {
+                        drawChart(data, stockType, company);
+                    }
+                    
+                    drawVolumeChart(data);
+                    updateStatistics(data[data.length - 1]);
+                })
+                .fail(function(jqXHR, textStatus, errorThrown) {
+                    alert(`Failed to fetch stock data: ${textStatus}`);
+                })
+                .always(function() {
+                    $(".chart-container .loading-overlay").removeClass("active");
+                });
+        }
+
+        // Update Chart
+        function updateChart() {
+            let company = $("#company-list .active").text();
+            if (company) fetchStockData(company);
+            else alert("Please select a company first.");
+        }
+
+        // Draw Chart.js Line Chart with Tooltips
+        function drawChart(data, stockType, company) {
+            let ctx = document.getElementById("stockChart").getContext("2d");
+            let graphType = $("#graph-type").val();
+            
+            if (stockChart) stockChart.destroy();
+
+            const isDarkMode = $("body").hasClass("dark-mode");
+            const gridColor = isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)";
+            const textColor = isDarkMode ? "#e0e0e0" : "#2c3e50";
+
+            let labels = data.map(d => d.index_date);
+            let values = data.map(d => d[stockType] ?? null);
+            
+            stockChart = new Chart(ctx, {
+                type: graphType,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `${company} - ${stockType.replace("_index_value", "").replace("_", " ")}`,
+                        data: values,
+                        borderColor: isDarkMode ? "#4dabf7" : "steelblue",
+                        backgroundColor: isDarkMode ? "rgba(77, 171, 247, 0.1)" : "rgba(70, 130, 180, 0.2)",
+                        borderWidth: 2,
+                        fill: true,
+                        tension: graphType === 'line' ? 0.3 : 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            backgroundColor: isDarkMode ? "rgba(30, 30, 30, 0.9)" : "rgba(0,0,0,0.8)",
+                            borderRadius: 8,
+                            padding: 10,
+                        },
+                        legend: {
+                            labels: {
+                                color: textColor
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            title: { display: true, text: "Date", color: textColor },
+                            ticks: { autoSkip: true, maxTicksLimit: 10, color: textColor },
+                            grid: { color: gridColor }
+                        },
+                        y: { 
+                            title: { display: true, text: "Stock Price", color: textColor },
+                            ticks: { color: textColor },
+                            grid: { color: gridColor }
+                        }
+                    },
+                    animation: { duration: 1000, easing: "easeOutQuart" }
+                }
+            });
+        }
+
+        // Draw D3.js Volume Chart with Animation
+        function drawVolumeChart(data) {
+            d3.select("#volumeChart").selectAll("*").remove();
+
+            const isDarkMode = $("body").hasClass("dark-mode");
+            const textColor = isDarkMode ? "#e0e0e0" : "#2c3e50";
+
+            const svg = d3.select("#volumeChart"),
+                margin = { top: 20, right: 30, bottom: 30, left: 50 },
+                width = +svg.attr("width") - margin.left - margin.right,
+                height = +svg.attr("height") - margin.top - margin.bottom;
+
+            const x = d3.scaleBand().range([0, width]).padding(0.2);
+            const y = d3.scaleLinear().range([height, 0]);
+
+            const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+            x.domain(data.map(d => d.index_date));
+            y.domain([0, d3.max(data, d => d.volume ?? 0)]);
+
+            // Add axes with styled colors
+            g.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x).tickFormat((d, i) => (i % 5 === 0 ? d : "")))
+                .selectAll("text")
+                .style("fill", textColor);
+
+            g.append("g")
+                .call(d3.axisLeft(y))
+                .selectAll("text")
+                .style("fill", textColor);
+
+            // Style grid lines
+            g.append("g")
+                .attr("class", "grid")
+                .call(d3.axisLeft(y)
+                    .tickSize(-width)
+                    .tickFormat(""))
+                .style("stroke", isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)");
+
+            // Add bars with enhanced styling
+            g.selectAll(".bar")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("class", "bar")
+                .attr("x", d => x(d.index_date))
+                .attr("width", x.bandwidth())
+                .attr("fill", isDarkMode ? "#4dabf7" : "orange")
+                .attr("y", height)
+                .attr("height", 0)
+                .transition()
+                .duration(750)
+                .attr("y", d => y(d.volume ?? 0))
+                .attr("height", d => height - y(d.volume ?? 0));
+
+            // Add tooltips
+            const tooltip = d3.select("body").append("div")
+                .attr("class", "d3-tooltip")
+                .style("position", "absolute")
+                .style("visibility", "hidden")
+                .style("background-color", isDarkMode ? "#1e1e1e" : "white")
+                .style("padding", "10px")
+                .style("border-radius", "5px")
+                .style("box-shadow", "0 0 10px rgba(0,0,0,0.2)")
+                .style("pointer-events", "none");
+
+            g.selectAll(".bar")
+                .on("mouseover", function(event, d) {
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr("opacity", 0.7);
+                        
+                    tooltip.style("visibility", "visible")
+                        .html(`Date: ${d.index_date}<br>Volume: ${d.volume.toLocaleString()}`)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 10) + "px");
+                })
+                .on("mouseout", function() {
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr("opacity", 1);
+                        
+                    tooltip.style("visibility", "hidden");
+                });
+        }
+
+        // Update Statistics
+        function updateStatistics(latestData) {
+            function updateStatWithColor(elementId, value, isPercentage = false) {
+                const element = $(`#${elementId}`);
+                element.text(value !== undefined ? (isPercentage ? value + "%" : value) : "N/A");
+                
+                if (value > 0) {
+                    element.removeClass("negative").addClass("positive");
+                } else if (value < 0) {
+                    element.removeClass("positive").addClass("negative");
+                } else {
+                    element.removeClass("positive negative");
+                }
+            }
+
+            updateStatWithColor("points-change", latestData.points_change);
+            updateStatWithColor("change-percent", latestData.change_percent, true);
+            updateStatWithColor("pe-ratio", latestData.pe_ratio);
+            updateStatWithColor("pb-ratio", latestData.pb_ratio);
+            updateStatWithColor("div-yield", latestData.div_yield, true);
+        }
+
+        // Dark Mode Toggle with Enhanced Animation
+        function toggleDarkMode() {
+            $("body").toggleClass("dark-mode");
+            const isDark = $("body").hasClass("dark-mode");
+            const icon = $(".dark-mode-toggle i");
+            
+            icon.toggleClass("fa-moon fa-sun");
+            // Make moon icon darker when in light mode
+            if (!isDark) {
+                icon.css("color", "#1a1a1a"); // Dark gray color for better visibility
+            } else {
+                icon.css("color", ""); // Reset to default color in dark mode
+            }
+            
+            // Redraw charts if they exist
+            const activeCompany = $("#company-list .active").text();
+            if (activeCompany) {
+                fetchStockData(activeCompany);
+            }
+        }
+
+        // Add event listener for graph type change
+        $("#graph-type").on("change", function() {
+            let company = $("#company-list .active").text();
+            if (company) fetchStockData(company);
+        });
+    </script>
+</body>
+</html>
