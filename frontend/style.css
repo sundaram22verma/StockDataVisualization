@@ -1,0 +1,380 @@
+:root {
+    --primary: #007bff;
+    --secondary: #6c757d;
+    --bg-light: #f4f7fa;
+    --bg-dark: #121212;
+    --text-light: #2c3e50;
+    --text-dark: #e0e0e0;
+    --card-bg-light: white;
+    --card-bg-dark: #1e1e1e;
+    --border-dark: #333;
+    --hover-dark: #2a2a2a;
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.4s ease;
+}
+
+body.dark-mode {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+.container {
+    background-color: var(--card-bg-light);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    padding: 2rem;
+    margin: 2rem auto;
+    transition: all 0.4s ease;
+}
+
+.dark-mode .container {
+    background-color: var(--card-bg-dark);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    border: 1px solid var(--border-dark);
+}
+
+h4, h5 {
+    color: var(--text-light);
+    font-weight: 600;
+    transition: color 0.4s ease;
+}
+
+.dark-mode h4, .dark-mode h5 {
+    color: var(--text-dark);
+    text-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+
+/* Company List */
+.company-list-container {
+    max-height: 880px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: 12px;
+    background-color: var(--card-bg-light);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+    transition: all 0.4s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+}
+
+.dark-mode .company-list-container {
+    background-color: var(--card-bg-dark);
+    border: 1px solid var(--border-dark);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+}
+
+.company-list-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.company-list-container::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 3px;
+}
+
+.dark-mode .company-list-container::-webkit-scrollbar-track {
+    background: var(--card-bg-dark);
+}
+
+.company-list-container .list-group-item {
+    border-left: 4px solid transparent;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.dark-mode .company-list-container .list-group-item {
+    color: var(--text-dark);
+    border-bottom: 1px solid var(--border-dark);
+}
+
+.company-list-container .list-group-item:hover {
+    border-left-color: var(--primary);
+    background-color: rgba(0,123,255,0.1);
+    transform: translateX(5px);
+}
+
+.dark-mode .company-list-container .list-group-item:hover {
+    background-color: var(--hover-dark);
+}
+
+.company-list-container .list-group-item.active {
+    border-left-color: var(--primary);
+    background-color: rgba(0,123,255,0.2);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.dark-mode .company-list-container .list-group-item.active {
+    background-color: rgba(0,123,255,0.15);
+    box-shadow: 0 0 15px rgba(0,123,255,0.1);
+}
+
+/* Search Bar */
+.search-bar {
+    margin-bottom: 1rem;
+}
+
+#company-search {
+    border-radius: 20px;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid #ced4da;
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.dark-mode #company-search {
+    background-color: var(--card-bg-dark);
+    border-color: var(--border-dark);
+    color: var(--text-dark);
+}
+
+#company-search:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+#company-search::placeholder {
+    color: #ced4da;
+    transition: color 0.3s ease;
+}
+
+.dark-mode #company-search::placeholder {
+    color: white;
+}
+
+/* Controls */
+.controls-container {
+    background-color: var(--bg-light);
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    transition: all 0.4s ease;
+}
+
+.dark-mode .controls-container {
+    background-color: var(--card-bg-dark);
+    border: 1px solid var(--border-dark);
+}
+
+.form-select {
+    border: 1px solid #ced4da;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    background: transparent;
+    cursor: pointer;
+}
+
+.dark-mode .form-select {
+    background-color: var(--card-bg-dark);
+    border-color: var(--border-dark);
+    color: var(--text-dark);
+}
+
+.form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+/* Chart Containers */
+.chart-container {
+    background-color: var(--card-bg-light);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: all 0.4s ease;
+}
+
+.dark-mode .chart-container {
+    background-color: var(--card-bg-dark);
+    border: 1px solid var(--border-dark);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+/* Stats Panel */
+.stats-panel {
+    background: linear-gradient(135deg, var(--card-bg-light), var(--bg-light));
+    border-left: 4px solid var(--primary);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    transition: all 0.4s ease;
+}
+
+.dark-mode .stats-panel {
+    background: linear-gradient(135deg, var(--card-bg-dark), #252525);
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    border: 1px solid var(--border-dark);
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.dark-mode .stat-item {
+    border-bottom: 1px solid var(--border-dark);
+}
+
+.dark-mode .stat-item strong {
+    color: #4dabf7;
+}
+
+.stat-item strong {
+    transition: all 0.3s ease;
+}
+
+.stat-item strong.positive {
+    color: #28a745;
+}
+
+.stat-item strong.negative {
+    color: #dc3545;
+}
+
+.dark-mode .stat-item strong.positive {
+    color: #51cf66;
+}
+
+.dark-mode .stat-item strong.negative {
+    color: #ff6b6b;
+}
+
+/* Dark Mode Toggle */
+.dark-mode-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.dark-mode-toggle .btn {
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.4s ease;
+    background: var(--card-bg-light);
+    border: 2px solid #ced4da;  /* Lighter border in light mode */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  /* Add subtle shadow */
+    color: #333;  /* Darker icon color in light mode */
+}
+
+.dark-mode .dark-mode-toggle .btn {
+    background: var(--card-bg-dark);
+    color: #ffd700;
+    border: 2px solid var(--border-dark);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+}
+
+.dark-mode-toggle .btn:hover {
+    transform: scale(1.1);  /* Add hover effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dark-mode .dark-mode-toggle .btn:hover {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+/* Add these styles in the <style> section */
+.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    background: var(--card-bg-light);
+    padding: 20px;
+    margin: 0;
+    border-radius: 0;
+}
+
+.dark-mode .fullscreen {
+    background: var(--card-bg-dark);
+}
+
+.fullscreen-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.dark-mode .fullscreen-btn {
+    color: var(--text-dark);
+}
+
+.fullscreen-btn:hover {
+    background: rgba(0,0,0,0.1);
+}
+
+/* Add these styles for the modal */
+.chart-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: var(--card-bg-light);
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    height: 90%;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.dark-mode .modal-content {
+    background: var(--card-bg-dark);
+    border: 1px solid var(--border-dark);
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    font-size: 1.5rem;
+    z-index: 1001;
+}
+
+.dark-mode .modal-close {
+    color: var(--text-dark);
+}
+
+.modal-chart-container {
+    width: 100%;
+    height: calc(100% - 40px);
+    margin-top: 20px;
+}

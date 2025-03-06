@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Data Visualization</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Dark Mode Toggle -->
+    <div class="dark-mode-toggle">
+        <button class="btn btn-secondary" onclick="toggleDarkMode()">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <!-- Company List -->
+            <div class="col-md-3 position-relative">
+                <h4>Companies</h4>
+                <div class="search-bar">
+                    <input type="text" id="company-search" class="form-control" placeholder="Search companies...">
+                </div>
+                <div class="company-list-container">
+                    <ul id="company-list" class="list-group"></ul>
+                </div>
+            </div>
+
+            <!-- Stock Chart & Stats -->
+            <div class="col-md-9">
+                <div class="controls-container">
+                    <div class="row">
+                        <div class="col-12 d-flex gap-3">
+                            <div class="flex-grow-1">
+                                <select id="stock-type" class="form-select rounded-pill">
+                                    <option value="closing_index_value">Closing Price</option>
+                                    <option value="open_index_value">Opening Price</option>
+                                    <option value="high_index_value">High Price</option>
+                                    <option value="low_index_value">Low Price</option>
+                                </select>
+                            </div>
+                            <div class="flex-grow-1">
+                                <select id="graph-type" class="form-select rounded-pill">
+                                    <option value="line">Line Graph</option>
+                                    <option value="bar">Bar Graph</option>
+                                </select>
+                            </div>
+                            <div class="flex-grow-1">
+                                <select id="date-range" class="form-select rounded-pill">
+                                    <option value="7">Last Week</option>
+                                    <option value="30">Last Month</option>
+                                    <option value="90">Last 3 Months</option>
+                                    <option value="180">Last 6 Months</option>
+                                    <option value="365">Last Year</option>
+                                    <option value="all" selected>All Time</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container position-relative">
+                    <button class="fullscreen-btn" onclick="toggleFullscreen(this.parentElement)">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                    <canvas id="stockChart"></canvas>
+                </div>
+
+                <div class="stats-panel">
+                    <h5>Stock Statistics</h5>
+                    <div class="stat-item">
+                        <span>Points Change</span>
+                        <strong id="points-change"></strong>
+                    </div>
+                    <div class="stat-item">
+                        <span>Change %</span>
+                        <strong id="change-percent"></strong>
+                    </div>
+                    <div class="stat-item">
+                        <span>PE Ratio</span>
+                        <strong id="pe-ratio"></strong>
+                    </div>
+                    <div class="stat-item">
+                        <span>PB Ratio</span>
+                        <strong id="pb-ratio"></strong>
+                    </div>
+                    <div class="stat-item">
+                        <span>Dividend Yield</span>
+                        <strong id="div-yield"></strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add this modal HTML just before the closing body tag -->
+    <div id="chartModal" class="chart-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-chart-container">
+                <canvas id="modalChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
