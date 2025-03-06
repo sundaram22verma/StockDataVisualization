@@ -2,47 +2,47 @@
 
 A responsive web application for visualizing and analyzing stock market data with interactive charts and real-time statistics.
 
-## ✨ Features
+## 🚀 Features
 
 - **📊 Interactive Stock Charts**: Visualize stock data with both line and bar graph options.
 - **📌 Multiple Data Views**: Toggle between different stock metrics:
-  - 📉 Closing Price
-  - 📈 Opening Price
-  - 📊 High Price
-  - 📉 Low Price
+  - Closing Price
+  - Opening Price
+  - High Price
+  - Low Price
 - **⏳ Flexible Time Ranges**: View data across various periods:
-  - 🗓 Last Week
-  - 🗓 Last Month
-  - 📅 Last 3 Months
-  - 📅 Last 6 Months
-  - 📆 Last Year
-  - 🏛 All Time
-- **🔍 Company Search**: Quick search functionality to find specific companies.
+  - Last Week
+  - Last Month
+  - Last 3 Months
+  - Last 6 Months
+  - Last Year
+  - All Time
+- **🔎 Company Search**: Quick search functionality to find specific companies.
 - **🌙 Dark Mode**: Toggle between light and dark themes for comfortable viewing.
-- **🔎 Fullscreen Mode**: Expand charts for detailed analysis.
-- **📌 Key Statistics**: View important stock metrics, including:
-  - 📊 Points Change
-  - 📉 Change Percentage
-  - 🏦 PE Ratio
-  - 💰 PB Ratio
-  - 💵 Dividend Yield
+- **🔍 Fullscreen Mode**: Expand charts for detailed analysis.
+- **📈 Key Statistics**: View important stock metrics, including:
+  - Points Change
+  - Change Percentage
+  - PE Ratio
+  - PB Ratio
+  - Dividend Yield
 
 ## 🛠 Technologies Used
 
-- **💻 Frontend Framework**: Bootstrap 5.3.0
-- **📈 Charting Libraries**:
-  - 📊 Chart.js 3.7.0
-  - 📉 D3.js v7
+- **🎨 Frontend Framework**: Bootstrap 5.3.0
+- **📉 Charting Libraries**:
+  - Chart.js 3.7.0
+  - D3.js v7
 - **📦 Additional Libraries**:
-  - ⚡ jQuery 3.6.0
-  - 🎨 Font Awesome 6.0.0
+  - jQuery 3.6.0
+  - Font Awesome 6.0.0
 
-## 🚀 Setup
+## ⚙️ Setup
 
 ### 📥 Clone the Repository
 
 ```bash
-git clone https://github.com/sundaram22verma/StockDataVisualization.git
+git clone [repository-url]
 ```
 
 ### 📂 Navigate to the Project Directory
@@ -51,7 +51,7 @@ git clone https://github.com/sundaram22verma/StockDataVisualization.git
 cd stock-data-visualization
 ```
 
-### ▶ Running the Backend
+### 🛠 Installing Backend Dependencies
 
 Navigate to the backend folder:
 
@@ -59,13 +59,27 @@ Navigate to the backend folder:
 cd backend
 ```
 
+Install the required Python packages:
+
+```bash
+pip install -r requirements.txt
+```
+
+If `requirements.txt` is not available, manually install dependencies:
+
+```bash
+pip install Flask==2.2.2 flask-cors==3.0.10 pandas==1.5.0
+```
+
+### ▶️ Running the Backend
+
 Run the backend server:
 
 ```bash
 python app.py
 ```
 
-### ▶ Running the Frontend
+### 🌐 Running the Frontend
 
 Navigate to the frontend folder:
 
@@ -79,7 +93,7 @@ Open the terminal, type:
 cmd
 ```
 
-Then, start the index.html file by running:
+Then, start the `index.html` file by running:
 
 ```bash
 start index.html
@@ -89,12 +103,12 @@ start index.html
 
 ```
 stock-data-visualization/
-│-- backend/               # 🖥 Backend server files
-│   ├── app.py            # 📝 Python backend script
-│-- frontend/              # 🎨 Frontend UI files
-│   ├── index.html        # 🌐 Main HTML file
-│   ├── styles.css        # 🎨 Stylesheet
-│   ├── script.js         # 🔧 JavaScript logic
-│-- README.md             # 📖 Project documentation
+│-- backend/               # Backend server files
+│   ├── app.py            # Python backend script
+│-- frontend/              # Frontend UI files
+│   ├── index.html        # Main HTML file
+│   ├── styles.css        # Stylesheet
+│   ├── script.js         # JavaScript logic
+│-- README.md             # Project documentation
 ```
 
