@@ -42,7 +42,7 @@ A responsive web application for visualizing and analyzing stock market data wit
 ### 📥 Clone the Repository
 
 ```bash
-git clone [repository-url]
+git clone https://github.com/sundaram22verma/StockDataVisualization.git
 ```
 
 ### 📂 Navigate to the Project Directory
